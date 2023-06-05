@@ -1,0 +1,3 @@
+raw_replays_folder = "./raw_replays"
+parsed_replays_folder = "./parsed_replays"
+replays_extension = "replay"
