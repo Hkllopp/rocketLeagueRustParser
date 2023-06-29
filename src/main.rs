@@ -38,10 +38,18 @@ fn run(config_str : HashMap<String, String>) -> Result<(), Box<dyn error::Error>
                 }
 
                 let replay_buffer = fs::read(&replay_path)?;
-                let replay = parse_rl(&replay_buffer)?;
 
-                let mut json_file = fs::File::create(json_path)?;
-                serde_json::to_writer(&mut json_file, &replay)?;
+                // Attempt to parse the replay
+                match parse_rl(&replay_buffer) {
+                    Ok(replay) => {
+                        let mut json_file = fs::File::create(json_path)?;
+                        serde_json::to_writer(&mut json_file, &replay)?;
+                    }
+                    Err(error) => {
+                        println!("Parsing failed for file {}: {}", replay_filename, error);
+                        continue;
+                    }
+                }
             }
         }
     }
